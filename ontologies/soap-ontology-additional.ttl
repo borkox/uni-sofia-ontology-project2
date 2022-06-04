@@ -1,0 +1,25 @@
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sc:   <urn:soap/crime/ontology#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+
+sc:LeakInfoSourcePeople owl:equivalentClass 
+    [ 
+	  rdfs:subClassOf sc:Person ;
+	  rdf:type owl:Restriction;
+      owl:hasValue sc:roboSoapStrategyProject;
+      owl:onProperty sc:worksFor
+	  
+    ] .
+	
+sc:LeakInfoDestinationPeople owl:equivalentClass 
+    [ rdf:type owl:Restriction;
+	  rdfs:subClassOf sc:Person ;
+      owl:hasValue sc:domesticSoapSoftwareCompany;
+      owl:onProperty sc:worksFor
+    ] .
+
+
+
