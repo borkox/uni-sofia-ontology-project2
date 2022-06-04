@@ -112,6 +112,25 @@ sc:riki  rdf:type         sc:Man ;
         sc:worksFor       sc:soapAcademyIntCompany .
 		
 
+sc:LeakInfoSourcePeople owl:equivalentClass
+    [
+	  rdfs:subClassOf sc:Person ;
+	  rdf:type owl:Restriction;
+      owl:hasValue sc:roboSoapStrategyProject;
+      owl:onProperty sc:worksFor
+
+    ] .
+
+sc:LeakInfoDestinationPeople owl:equivalentClass
+    [ rdf:type owl:Restriction;
+	  rdfs:subClassOf sc:Person ;
+      owl:hasValue sc:domesticSoapSoftwareCompany;
+      owl:onProperty sc:worksFor
+    ] .
+
+
+# From here till the end new facts are added in addition to
+# the initial ontology defined in first project "uni-sofia-ontology-project"
 
 sc:Email
         rdf:type         owl:Class ;
@@ -125,5 +144,5 @@ sc:lunchConversationRikiSophie
 sc:riki sc:loveButNotLoved  sc:sophie .
 
 sc:canShareSensitiveInfoTo rdf:type owl:TransitiveProperty.
-		
+
 

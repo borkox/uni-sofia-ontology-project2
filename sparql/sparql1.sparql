@@ -1,0 +1,7 @@
+PREFIX sc: <urn:soap/crime/ontology#>
+select * where { 
+	?p1 a sc:LeakInfoSourcePeople .
+    ?p1 sc:isPartOfConversation ?c.
+    ?p2 sc:isPartOfConversation ?c.
+    FILTER (!sameTerm(?p1, ?p2))
+}
