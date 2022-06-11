@@ -1,4 +1,4 @@
-# sparql/sparql1.sparql
+# sparql/sparql3.txt
 PREFIX sc: <urn:soap/crime/ontology#>
 
 select * where { 

@@ -1,4 +1,4 @@
-# sparql/sparql2.sparql
+# sparql/sparql4.txt
 PREFIX sc: <urn:soap/crime/ontology#>
 
 construct {

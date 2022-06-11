@@ -1,4 +1,4 @@
-# sparql/sparql7.sparql
+# sparql/sparql9.txt
 
 PREFIX sc: <urn:soap/crime/ontology#>
 select ?p1 ?firstHop ?p2
