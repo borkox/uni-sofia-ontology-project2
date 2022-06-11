@@ -1,0 +1,15 @@
+PREFIX sc: <urn:soap/crime/ontology#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+select *
+where { 
+	?p1 a sc:LeakInfoSourcePeople .
+    ?p2 a sc:LeakInfoDestinationPeople.
+    
+    #?p1 ((sc:isPartOfConversation/sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)* ?p2 .
+    ?p1 sc:isPartOfConversation ?firstHop .
+    ?firstHop ((sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)* ?p2 .
+   
+    
+    FILTER (!sameTerm(?p1, ?p2))
+    FILTER NOT EXISTS{?firstHop rdf:type sc:Email. }
+}

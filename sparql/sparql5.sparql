@@ -1,0 +1,8 @@
+# sparql/sparql5.sparql
+
+PREFIX sc: <urn:soap/crime/ontology#>
+select * where { 
+    ?p1 a sc:LeakInfoSourcePeople .
+    ?p2 a sc:LeakInfoDestinationPeople.
+    ?p1 ((sc:isPartOfConversation/sc:hasConversationParticipant)|sc:isGoodFriendTo)* ?p2
+}
