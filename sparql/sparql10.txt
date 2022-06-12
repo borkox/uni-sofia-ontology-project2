@@ -3,13 +3,13 @@ PREFIX sc: <urn:soap/crime/ontology#>
 
 select *
 where {
-	?p1 a sc:LeakInfoSourcePeople .
+	  ?p1 a sc:LeakInfoSourcePeople .
     ?p2 a sc:LeakInfoDestinationPeople.
     { ?p1 sc:isPartOfConversation ?firstHopConversation .
       ?firstHopConversation ((sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)+ ?p2 .
       FILTER (!sameTerm(?p1, ?p2))
       FILTER NOT EXISTS{?firstHopConversation rdf:type sc:Email. }
-    } UNION  {
+    } UNION {
       ?p1 (sc:isGoodFriendTo|^sc:canSeeMonitor) ?firstHopPerson .
       ?firstHopPerson ((sc:isPartOfConversation/sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)+ ?p2 .
       FILTER (!sameTerm(?p1, ?p2))
