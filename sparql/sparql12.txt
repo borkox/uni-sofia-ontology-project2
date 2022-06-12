@@ -1,4 +1,4 @@
-# sparql/sparql11.txt
+# sparql/sparql12.txt
 PREFIX sc: <urn:soap/crime/ontology#>
 
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

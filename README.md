@@ -5,7 +5,7 @@ Author: Borislav Markov
 # Introduction
 
 This ontology will describe a criminal story similar to
-"soap opera" series. This is same story as initial version of the project
+"soap opera" series. This is same story as the initial version of the project
 https://github.com/borkox/uni-sofia-ontology-project but with GraphDB
 and no custom rules used, just SPARQL and OWL reasoning supported by
 the engine of GraphDB.
@@ -34,13 +34,13 @@ This is a crime.
 The local detective asks all people involved trying to get more evidence on the case.
 He wants to know more about what happened in the last week.
 He then understands that:
-* John doesn't work in the samebuilding with Peter
+* John doesn't work in the same building with Peter
 * Peter, Laura and Riki works in the same building.
 * Laura loves John but is not loved from John.
 * Peter likes Laura but is not loved from Laura.
 * Riki works behind Peter and can see his monitor.
 * Peter doesn't lock his computer while he is away.
-* In the evening before leak in information witnesses say
+* In the evening before the leak of information witnesses say
   that Laura talked to her cousin Sam.
 * Sam works for "Domestic Soap Software".
 * Laura and Riki always talk in the kitchen in the office.
@@ -55,8 +55,8 @@ information with the help of SPARQL language.
 
 # Prerequisite
 You must have GraphDB running (there is free version)
-https://www.ontotext.com/products/graphdb/graphdb-free/
-Requires registration
+https://www.ontotext.com/products/graphdb/graphdb-free/ , but it 
+requires registration.
 
 # Create repository
 Create repository "soap-crime" and choose ruleset to be OWL compatible.
@@ -75,7 +75,7 @@ Then click on the button "Import"
 ![Initial Ontology](doc/GraphView1.png)
 ![Initial Ontology](doc/dependencies-soap-crime.svg)
 
-# SPARQL and deductions
+# SPARQL and inference
 
 The following sparql queries can be run:
 
@@ -116,16 +116,16 @@ The following sparql queries can be run:
   ```text
       c	                    parent
       -----------------------------------
-  1	sc:Conversation	        sc:Event
-  2	sc:Conversation	        sc:WitnessedEvent
-  3	sc:OnlineConversation	sc:Conversation
-  4	sc:OnlineConversation	sc:Event
-  5	sc:OnlineConversation	sc:WitnessedEvent
-  6	sc:WitnessedEvent	    sc:Event
-  7	sc:Email	            sc:Conversation
-  8	sc:Email	            sc:OnlineConversation
-  9	sc:Email	            sc:Event
-  10	sc:Email	            sc:WitnessedEvent
+  1  sc:Conversation        sc:Event
+  2  sc:Conversation        sc:WitnessedEvent
+  3  sc:OnlineConversation  sc:Conversation
+  4  sc:OnlineConversation  sc:Event
+  5  sc:OnlineConversation  sc:WitnessedEvent
+  6  sc:WitnessedEvent      sc:Event
+  7  sc:Email               sc:Conversation
+  8  sc:Email               sc:OnlineConversation
+  9  sc:Email               sc:Event
+  10 sc:Email               sc:WitnessedEvent
   ```
   ![Hierarchy of sc:Event](doc/event_hierarchy.png)
 
@@ -143,13 +143,13 @@ The following sparql queries can be run:
   ```
   Result from sparql8.txt
   ```text
-      p1	      p2
-  1	sc:sara	  sc:sam
-  2	sc:peter  sc:sam
-  3	sc:john   sc:sam
-  4	sc:sara   sc:sophie
-  5	sc:peter  sc:sophie
-  6	sc:john   sc:sophie
+    p1        p2
+  1 sc:sara   sc:sam
+  2 sc:peter  sc:sam
+  3 sc:john   sc:sam
+  4 sc:sara   sc:sophie
+  5 sc:peter  sc:sophie
+  6 sc:john   sc:sophie
   ```
 
 * Select leak of information excluding email 
@@ -165,34 +165,38 @@ The following sparql queries can be run:
         ?p1 a sc:LeakInfoSourcePeople .
       ?p2 a sc:LeakInfoDestinationPeople.
       { ?p1 sc:isPartOfConversation ?firstHopConversation .
-        ?firstHopConversation ((sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)+ ?p2 .
+        ?firstHopConversation ((sc:hasConversationParticipant)
+           |sc:isGoodFriendTo
+           |^sc:canSeeMonitor)+ ?p2 .
         FILTER (!sameTerm(?p1, ?p2))
         FILTER NOT EXISTS{?firstHopConversation rdf:type sc:Email. }
       } UNION {
         ?p1 (sc:isGoodFriendTo|^sc:canSeeMonitor) ?firstHopPerson .
-        ?firstHopPerson ((sc:isPartOfConversation/sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)+ ?p2 .
+        ?firstHopPerson ((sc:isPartOfConversation/sc:hasConversationParticipant)
+           |sc:isGoodFriendTo
+           |^sc:canSeeMonitor)+ ?p2 .
         FILTER (!sameTerm(?p1, ?p2))
       }
   }
   ```
   Result from sparql8.txt
 ```text
-	p1        p2        firstHopConversation    firstHopPerson
-1	sc:peter  sc:sam    sc:peterAndJohnChat	
-2	sc:john   sc:sam    sc:peterAndJohnChat	
-3	sc:peter  sc:sophie                         sc:riki
-4	sc:peter  sc:sam                            sc:riki
+    p1        p2        firstHopConversation    firstHopPerson
+1   sc:peter  sc:sam    sc:peterAndJohnChat	
+2   sc:john   sc:sam    sc:peterAndJohnChat	
+3   sc:peter  sc:sophie                         sc:riki
+4   sc:peter  sc:sam                            sc:riki
 ```
 
 
 So detective now has some hypotheses to check.
 Here I give just an example how the result can be analyzed.
 
-Hypotheses from `#2 (John-Sam)` : John shared information to Peter
-from sc:peterAndJohnChat. Riki could steal information 
-from relation sc:canSeeMonitor. Further on Riki could share that 
-information to Laura (from sc:kitchenConversation) 
-and further on Laura could have shared info to outsider Sam because
+Hypotheses from `#2 (John-Sam)` : `John` shared information to `Peter`
+from the relation `sc:peterAndJohnChat`. `Riki` could steal information 
+from the relation `sc:canSeeMonitor`. Further on `Riki` could share that 
+information to `Laura` (from `sc:kitchenConversation`) 
+and further on `Laura` could have shared info to outsider `Sam` because
 they are in relation `sc:isGoodFriendTo`.
 
  
