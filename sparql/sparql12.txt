@@ -1,0 +1,30 @@
+# sparql/sparql11.txt
+PREFIX sc: <urn:soap/crime/ontology#>
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+select ?hypothesis ?x
+where {
+	?p1 a sc:LeakInfoSourcePeople .
+    ?p2 a sc:LeakInfoDestinationPeople.
+    ?x sc:loveButNotLoved ?p2 .
+    { ?p1 sc:isPartOfConversation ?firstHopConversation .
+      ?firstHopConversation ((sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)+ ?p2 .
+      FILTER (!sameTerm(?p1, ?p2))
+      FILTER NOT EXISTS{?firstHopConversation rdf:type sc:Email. }
+    } UNION  {
+      ?p1 (sc:isGoodFriendTo|^sc:canSeeMonitor) ?firstHopPerson .
+      ?firstHopPerson ((sc:isPartOfConversation/sc:hasConversationParticipant)|sc:isGoodFriendTo|^sc:canSeeMonitor)+ ?p2 .
+      FILTER (!sameTerm(?p1, ?p2))
+    }
+    BIND (
+        IF(bound(?firstHopConversation),
+           STRAFTER(str(?firstHopConversation),'#'),
+           STRAFTER(str(?firstHopPerson),'#'))
+        as ?firstHop)
+    BIND (concat(STRAFTER(str(?p1),'#'),
+            '-',
+            ?firstHop,
+            '-*-',
+            STRAFTER(str(?p2),'#'))
+        as ?hypothesis)
+}
